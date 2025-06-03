@@ -18,11 +18,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -34,8 +37,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.dkdevs.testing2.R
@@ -68,7 +73,11 @@ fun IdentifyScreen(
     }
 
     var galleryPermission by remember {
-        mutableStateOf(context.checkSelfPermission(android.Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            mutableStateOf(context.checkSelfPermission(android.Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED)
+        } else {
+            mutableStateOf(context.checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+        }
     }
 
     var cameraLauncher =
@@ -91,6 +100,7 @@ fun IdentifyScreen(
                     "Dhaval",
                     "IdentifyScreen: MULTIPART : ${multipart.body} -- ${multipart.headers}",
                 )
+                imageStr = it.toString()
                 vm.identifyPlant(multipart)
             }
         }
@@ -99,6 +109,7 @@ fun IdentifyScreen(
         rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicturePreview()) {
             it?.let {
 
+                imageStr = Utils.bitmapToUri(context, it).toString()
                 val multipart = Utils.bitmapToMultipart(it)
                 vm.identifyPlant(multipart)
             }
@@ -106,7 +117,9 @@ fun IdentifyScreen(
 
     LaunchedEffect(key1 = identifyUi) {
         if (identifyUi.plantDetails.isNotEmpty()) {
+            Log.e("Dhaval", "IdentifyScreen: LAUNCH EFFECT", )
             redirectToPlantDetailScreen.invoke(identifyUi.plantDetails.first().id)
+            vm.clearData()
         }
     }
 
@@ -134,7 +147,24 @@ fun IdentifyScreen(
                         model = Uri.parse(imageStr), contentDescription = "plant image",
                         modifier = Modifier.height((height / 2).dp)
                     )
-                    LinearProgressIndicator()
+
+                    if (identifyUi.error.isNotEmpty()) {
+                        Text(text = identifyUi.error, fontWeight = FontWeight.Normal, fontSize = 14.sp, color = MaterialTheme.colorScheme.primary)
+                        Button(onClick = {
+                            imageStr = ""
+                        }) {
+                            Text(text = "Retry")
+                        }
+                    }
+                    else {
+                        Text(
+                            text = "Identifying...",
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        LinearProgressIndicator()
+                    }
                 }
             } else {
                 Row(

@@ -2,6 +2,7 @@ package com.dkdevs.testing2.ui.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -101,7 +102,8 @@ fun MainScreen(
                                     fontSize = 12.sp)
                         },
                         icon = {
-                            Icon(painter = painterResource(id = routes.icon), contentDescription = null)
+                            Icon(painter = painterResource(id = routes.icon), contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary)
                         })
                 }
             }

@@ -57,6 +57,12 @@ class IdentifyViewModel(
                         "Dhaval",
                         "identifyPlant: ERROR : ${e.response()} --- ${e.message()} --- ${e.cause}",
                     )
+                    if (e.code() == 404){
+                        _plantDetails.value = IdentifyUi(error = "Image not found!")
+                    }
+                    else {
+                        _plantDetails.value = IdentifyUi(error = "Something went wrong!")
+                    }
                 }
             } else {
                 _plantDetails.value = IdentifyUi(error = "No Internet connection!")
@@ -85,4 +91,7 @@ class IdentifyViewModel(
         }
     }
 
+    fun clearData() {
+        _plantDetails.value = IdentifyUi(plantDetails = emptyList())
+    }
 }

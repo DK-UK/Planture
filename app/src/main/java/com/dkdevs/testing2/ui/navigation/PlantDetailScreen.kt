@@ -1,7 +1,12 @@
 package com.dkdevs.testing2.ui.navigation
 
 import android.util.Log
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,6 +31,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -38,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -64,11 +71,20 @@ fun PlantDetailScreen(
     val vm: DetailViewModel = koinViewModel()
     val detailUi = vm.plants.collectAsStateWithLifecycle().value
 
-    var isWishlist by remember(key1 = detailUi.plants.is_wishlisted){
+    var isWishlist by remember(key1 = detailUi.plants.is_wishlisted) {
         mutableStateOf(detailUi.plants.is_wishlisted)
     }
 
-    var isInMyGarden by remember (key1 = detailUi.plants.is_in_my_garden) {
+    val scale by animateFloatAsState(
+        targetValue = if (isWishlist) 1.2f else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioHighBouncy,
+            stiffness = Spring.StiffnessLow
+        )
+    )
+
+
+    var isInMyGarden by remember(key1 = detailUi.plants.is_in_my_garden) {
         mutableStateOf(detailUi.plants.is_in_my_garden)
     }
 
@@ -95,19 +111,26 @@ fun PlantDetailScreen(
                 onBackPressed = {
                     onBackPressed.invoke()
                 }, postIcons = {
-                    if (isInMyGarden){
+                    if (isInMyGarden) {
                         Column {
                             Icon(Icons.Default.MoreVert, contentDescription = "More options",
                                 modifier = Modifier.clickable {
                                     showMoreOption = true
                                 })
-                            if (showMoreOption){
-                                DropdownMenu(expanded = showMoreOption, onDismissRequest = { showMoreOption = false }) {
-                                    DropdownMenuItem(text = { Text(text = "Remove from garden") }, onClick = {
-                                        showMoreOption = false
-                                        vm.addPlantToMyGarden(addToMyGarden = false, detailUi.plants)
-                                        isInMyGarden = false
-                                    })
+                            if (showMoreOption) {
+                                DropdownMenu(
+                                    expanded = showMoreOption,
+                                    onDismissRequest = { showMoreOption = false }) {
+                                    DropdownMenuItem(
+                                        text = { Text(text = "Remove from garden") },
+                                        onClick = {
+                                            showMoreOption = false
+                                            vm.addPlantToMyGarden(
+                                                addToMyGarden = false,
+                                                detailUi.plants
+                                            )
+                                            isInMyGarden = false
+                                        })
                                 }
                             }
                         }
@@ -131,8 +154,11 @@ fun PlantDetailScreen(
         if (showDialog) {
             Box(
                 modifier = Modifier.fillMaxSize()
-            ){
-                DialogBox(message = "This plant will be add to your garden. Are you sure ?", show = showDialog, onDismiss = { showDialog = !showDialog }) {
+            ) {
+                DialogBox(
+                    title = "This plant will be add to your garden. Are you sure ?",
+                    show = showDialog,
+                    onDismiss = { showDialog = !showDialog }) {
                     showDialog = !showDialog
                     isInMyGarden = true
                     vm.addPlantToMyGarden(true, detailUi.plants)
@@ -177,15 +203,20 @@ fun PlantDetailScreen(
                     )
 
                     if (!detailUi.plants.is_in_my_garden) {
-                        Icon(imageVector = if (isWishlist) Icons.Default.Favorite
-                        else Icons.Default.FavoriteBorder, contentDescription = "wishlist icon",
-                            modifier = Modifier
-                                .clickable {
-                                    isWishlist = !isWishlist
-                                    vm.addPlantToWishlist(isWishlist, detailUi.plants)
-                                }
-                                .align(Alignment.BottomEnd))
 
+                        IconButton(onClick = {
+                            isWishlist = !isWishlist
+                            vm.addPlantToWishlist(isWishlist, detailUi.plants)
+                        },
+                            modifier = Modifier.scale(scale)
+                                    .align(Alignment.BottomEnd)) {
+                            Icon(
+                                imageVector = if (isWishlist) Icons.Default.Favorite
+                                else Icons.Default.FavoriteBorder,
+                                contentDescription = "wishlist icon",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
                 }
 
@@ -326,6 +357,17 @@ fun PlantDetailScreen(
 @Composable
 private fun prevDetailScreen() {
 
+    var fav by remember {
+        mutableStateOf(false)
+    }
+    val scale by animateFloatAsState(
+        targetValue = if (fav) 1.2f else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioHighBouncy,
+            stiffness = Spring.StiffnessLow
+        )
+    )
+
     Testing2Theme {
         Scaffold(
             floatingActionButton = {
@@ -339,6 +381,7 @@ private fun prevDetailScreen() {
 
                 Box(
                     modifier = Modifier.fillMaxWidth()
+                        .background(color = MaterialTheme.colorScheme.onSecondary)
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_launcher_background),
@@ -349,14 +392,21 @@ private fun prevDetailScreen() {
                             .align(Alignment.TopCenter)
                     )
 
-                    Icon(
-                        imageVector = Icons.Default.Favorite, contentDescription = "wishlist icon",
+                    IconButton(
+                        onClick = { fav = !fav },
                         modifier = Modifier
-                            .align(
-                                Alignment.BottomEnd
-                            )
-                            .padding(10.dp)
-                    )
+                            .align(Alignment.BottomEnd)
+                            .padding(top = 10.dp)
+                            .scale(scale)
+                    ) {
+
+                        Icon(
+                            imageVector = if (fav) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = "wishlist icon",
+                            tint = if (fav) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
+
+                        )
+                    }
                 }
             }
 

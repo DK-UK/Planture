@@ -58,7 +58,7 @@ fun SplashScreen(
             Icon(
                 painter = painterResource(id = R.drawable.ic_logo), // Add your icon
                 contentDescription = "App Logo",
-                tint = Color(0xFF4C5B4E),
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .size(64.dp)
                     .align(Alignment.CenterHorizontally)
@@ -71,7 +71,7 @@ fun SplashScreen(
                 text = stringResource(id = R.string.app_name),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF4C5B4E)
+                color = MaterialTheme.colorScheme.primary
             )
 
         }

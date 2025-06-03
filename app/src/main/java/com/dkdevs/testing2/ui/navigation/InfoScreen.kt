@@ -144,7 +144,7 @@ fun InfoScreen(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_logo), // Add your icon
                     contentDescription = "App Logo",
-                    tint = Color(0xFF4C5B4E),
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .size(64.dp)
                         .align(Alignment.CenterHorizontally)
@@ -157,7 +157,7 @@ fun InfoScreen(
                     text = stringResource(id = R.string.app_name),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF4C5B4E)
+                    color = MaterialTheme.colorScheme.primary
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -189,7 +189,7 @@ fun InfoScreen(
                         .fillMaxWidth()
                         .height(50.dp),
                     shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4C5B4E))
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
                     Text("Let’s Grow 🌿", color = Color.White)
                 }
