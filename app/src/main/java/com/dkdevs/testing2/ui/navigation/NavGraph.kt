@@ -64,11 +64,10 @@ fun NavGraph(
 @Composable
 fun HomeGraph(
     navHostController: NavHostController,
-    modifier : Modifier,
     redirectToDetailScreen : (Int) -> Unit
 ) {
     NavHost(
-        modifier = modifier,
+
         navController = navHostController, startDestination = HomeNavRoutes.Dashboard) {
         composable<HomeNavRoutes.Dashboard> {
             DashboardScreen(){

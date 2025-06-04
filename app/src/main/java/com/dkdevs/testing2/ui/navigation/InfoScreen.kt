@@ -1,5 +1,6 @@
 package com.dkdevs.testing2.ui.navigation
 
+import android.app.Activity
 import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,8 +12,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -24,12 +27,17 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalViewConfiguration
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -40,65 +48,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.dkdevs.testing2.R
 import com.dkdevs.testing2.ui.theme.Testing2Theme
-
-/*
-@Composable
-fun InfoScreen(
-    modifier : Modifier = Modifier,
-    redirectToMainScreen : () -> Unit
-) {
-    Box(modifier = modifier){
-        Image(painter = painterResource(id = R.drawable.info_bg), contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop,
-            alpha = 0.3f)
-        
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    horizontal = 16.dp,
-                    vertical = 30.dp
-                ),
-            verticalArrangement = Arrangement.Bottom
-        ) {
-
-
-            var text = buildAnnotatedString {
-                this.withStyle(style = SpanStyle(
-                    fontSize = 24.sp
-                )) {
-                    this.append("Get up-to-date with the ")
-                }
-                this.withStyle(style = SpanStyle(
-                    fontSize = 30.sp,
-                    color = MaterialTheme.colorScheme.primary
-                )) {
-                    this.append("game knowledge ")
-                }
-                this.withStyle(style = SpanStyle(
-                    fontSize = 24.sp
-                )) {
-                    this.append("with us")
-                }
-
-            }
-
-            Text(text = text)
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Button(onClick = { redirectToMainScreen.invoke() },
-                modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Get started!",
-                    fontSize = 16.sp)
-            }
-        }
-    }
-}
-*/
 
 @Preview
 @Composable
@@ -113,6 +67,7 @@ private fun prevInfoScreen() {
 fun InfoScreen(
     redirectToMainScreen: () -> Unit
 ) {
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -121,6 +76,8 @@ fun InfoScreen(
                     colors = listOf(Color(0xFFEFF5EC), Color(0xFFD9EED8)) // Soft gradient overlay
                 )
             )
+            .navigationBarsPadding()
+
     ) {
         // Background image (illustrated)
         Image(
@@ -137,7 +94,8 @@ fun InfoScreen(
                 .padding(horizontal = 24.dp, vertical = 32.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // App Logo

@@ -1,5 +1,6 @@
 package com.dkdevs.testing2.ui.navigation
 
+import android.app.Activity
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,20 +13,33 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.dkdevs.testing2.R
 import com.dkdevs.testing2.ui.theme.Testing2Theme
 import com.dkdevs.testing2.ui.theme.plantColors
@@ -50,7 +64,38 @@ fun SplashScreen(
         }
     }
 
+//    val view = LocalView.current
+//    val window = (view.context as Activity).window
+//
+//    WindowCompat.setDecorFitsSystemWindows(window, false)
+//    window.statusBarColor = Color.Transparent.toArgb()
+//    WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
 
+    val owner = LocalLifecycleOwner.current
+
+  /*  DisposableEffect(owner) {
+        val observer = LifecycleEventObserver {owner, event->
+            when(event) {
+                Lifecycle.Event.ON_CREATE -> TODO()
+                Lifecycle.Event.ON_START -> {
+
+                }
+                Lifecycle.Event.ON_RESUME -> TODO()
+                Lifecycle.Event.ON_PAUSE -> TODO()
+                Lifecycle.Event.ON_STOP -> TODO()
+                Lifecycle.Event.ON_DESTROY -> TODO()
+                Lifecycle.Event.ON_ANY -> TODO()
+                else -> {}
+            }
+        }
+
+        owner.lifecycle.addObserver(observer)
+
+        onDispose {
+            owner.lifecycle.removeObserver(observer)
+        }
+    }
+*/
 
     Box(modifier = modifier
         .fillMaxSize()

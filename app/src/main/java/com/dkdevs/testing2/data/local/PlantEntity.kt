@@ -8,8 +8,8 @@ data class PlantEntity(
     @PrimaryKey(autoGenerate = true)
     var id : Int = 0,
     var plant_id : Int = 0,
-    val img_path : String = "",
-    var alt_img_url : String = "",
+    val img_thumbnail : String = "",
+    var big_img_url : String = "",
     var name : String = "",
     var scientific_name : String = "",
     var desc : String = "",

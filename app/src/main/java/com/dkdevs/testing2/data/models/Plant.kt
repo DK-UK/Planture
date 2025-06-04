@@ -24,5 +24,6 @@ fun Plant.toPlantEntity() = PlantEntity(
     name = this.name,
     scientific_name = this.scientific_name,
     desc = this.description,
-    alt_img_url = this.images.thumb
+    img_thumbnail = this.images.thumb,
+    big_img_url = this.images.title
 )

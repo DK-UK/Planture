@@ -176,7 +176,7 @@ fun Testing2Theme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-    val view = LocalView.current
+    /*val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
@@ -184,7 +184,7 @@ fun Testing2Theme(
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
-
+*/
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,

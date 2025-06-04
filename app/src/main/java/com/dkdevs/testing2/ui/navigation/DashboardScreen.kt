@@ -1,7 +1,11 @@
 package com.dkdevs.testing2.ui.navigation
 
+import android.app.Activity
 import android.content.res.Configuration
 import android.util.Log
+import android.view.WindowInsetsController
+import android.view.inputmethod.InputMethod
+import android.view.inputmethod.InputMethodManager
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkOut
@@ -20,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -47,13 +52,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.InputMode
+import androidx.compose.ui.input.InputModeManager
+import androidx.compose.ui.input.key.SoftKeyboardInterceptionModifierNode
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.dkdevs.testing2.data.models.Plant
@@ -79,8 +91,15 @@ fun DashboardScreen(
         mutableStateOf("")
     }
 
+    val view = LocalView.current
+    val window = (view.context as Activity).window
+    window.statusBarColor = MaterialTheme.colorScheme.primary.toArgb()
+    window.navigationBarColor = MaterialTheme.colorScheme.secondaryContainer.toArgb()
+    WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
+
     Scaffold(
-        modifier = modifier,
+        modifier = modifier
+            .statusBarsPadding(),
         topBar = {
             MyAppTopBar(title = "Dashboard")
         }
@@ -123,9 +142,7 @@ fun DashboardScreen(
                         .fillMaxSize()
 
                 ) {
-                    stickyHeader {
 
-                    }
                     items(dashboardUi.plants) {
                         plantItem(
                             plantName = it.name,
@@ -184,6 +201,7 @@ fun DashboardScreen(
                     ),
                     keyboardOptions = if (searchText.length > 2) KeyboardOptions(imeAction = ImeAction.Search) else KeyboardOptions.Default,
                     keyboardActions = KeyboardActions(onSearch = {
+                        window.setSoftInputMode(InputMethodManager.RESULT_HIDDEN)
                         vm.searchPlant(searchText)
                     }),
                     modifier = Modifier

@@ -1,5 +1,6 @@
 package com.dkdevs.testing2.ui.navigation
 
+import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -13,7 +14,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,10 +45,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -71,6 +74,8 @@ fun PlantDetailScreen(
 
     val vm: DetailViewModel = koinViewModel()
     val detailUi = vm.plants.collectAsStateWithLifecycle().value
+
+    val screenHeight = LocalConfiguration.current.screenHeightDp
 
     var isWishlist by remember(key1 = detailUi.plants.is_wishlisted) {
         mutableStateOf(detailUi.plants.is_wishlisted)
@@ -106,6 +111,8 @@ fun PlantDetailScreen(
 
 
     Scaffold(
+        modifier = Modifier
+            .statusBarsPadding(),
         topBar = {
             MyAppTopBar(
                 title = "Details",
@@ -195,18 +202,17 @@ fun PlantDetailScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(state = rememberScrollState())
-                    .padding(it)
-                    .padding(horizontal = 16.dp, vertical = 50.dp),
+                    .verticalScroll(state = rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
 
                 Box {
                     AsyncImage(
-                        model = detailUi.plants.img_path.ifEmpty { detailUi.plants.alt_img_url },
+                        model = detailUi.plants.big_img_url,
                         contentDescription = "${detailUi.plants.name}'s image",
-                        contentScale = ContentScale.Fit,
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxWidth()
+                            .height(((screenHeight / 2) - 100).dp)
                     )
 
                     if (!isInMyGarden) {
@@ -230,103 +236,146 @@ fun PlantDetailScreen(
                     }
                 }
 
-                Text(
-                    text = detailUi.plants.name,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-
-                Text(
-                    text = detailUi.plants.desc,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 14.sp,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-
-
-                Text(
-                    text = "Nurturing",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it)
+                        .padding(horizontal = 16.dp, vertical = 50.dp),
                 ) {
-                    Card(
-                        shape = RoundedCornerShape(corner = CornerSize(5.dp)),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
-                        )
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_droplet),
-                            contentDescription = null,
-                            modifier = Modifier.padding(6.dp)
-                        )
-                    }
+
                     Text(
-                        text = detailUi.plants.watering,
+                        text = detailUi.plants.name,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+
+                    Text(
+                        text = detailUi.plants.desc,
                         fontWeight = FontWeight.Normal,
                         fontSize = 14.sp,
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
-                }
 
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Card(
-                        shape = RoundedCornerShape(corner = CornerSize(5.dp)),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
-                        )
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_sunlight),
-                            contentDescription = null,
-                            modifier = Modifier.padding(6.dp)
-                        )
-                    }
                     Text(
-                        text = detailUi.plants.sunlight,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 14.sp,
+                        text = "Nurturing",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
-                }
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Card(
-                        shape = RoundedCornerShape(corner = CornerSize(5.dp)),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
-                        )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_plant),
-                            contentDescription = null,
-                            modifier = Modifier.padding(6.dp)
-                        )
+                        Card(
+                            shape = RoundedCornerShape(corner = CornerSize(5.dp)),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer
+                            )
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_droplet),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onBackground,
+                                modifier = Modifier.padding(10.dp)
+                            )
+                        }
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(5.dp)
+                        ){
+                            Text(
+                                text = "Watering",
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+
+                            Text(
+                                text = detailUi.plants.watering,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
                     }
-                    Text(
-                        text = detailUi.plants.soil,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 14.sp,
-                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Card(
+                            shape = RoundedCornerShape(corner = CornerSize(5.dp)),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer
+                            )
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_sunlight),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onBackground,
+                                modifier = Modifier.padding(10.dp)
+                            )
+                        }
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(5.dp)
+                        ) {
+                            Text(
+                                text = "Sunlight",
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onBackground,
+                                fontSize = 14.sp,
+                            )
+
+                            Text(
+                                text = detailUi.plants.sunlight,
+                                fontWeight = FontWeight.Normal,
+                                color = MaterialTheme.colorScheme.onBackground,
+                                fontSize = 12.sp,
+                            )
+                        }
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Card(
+                            shape = RoundedCornerShape(corner = CornerSize(5.dp)),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer
+                            )
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_plant),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onBackground,
+                                modifier = Modifier.padding(10.dp)
+                            )
+                        }
+                        Column(
+
+                        ) {
+                            Text(
+                                text = "Soil",
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onBackground,
+                                fontSize = 14.sp,
+                            )
+
+                            Text(
+                                text = detailUi.plants.soil,
+                                fontWeight = FontWeight.Normal,
+                                color = MaterialTheme.colorScheme.onBackground,
+                                fontSize = 12.sp,
+                            )
+                        }
+                    }
                 }
-
-
             }
 
             /* LazyColumn(
@@ -363,9 +412,12 @@ fun PlantDetailScreen(
     }
 }
 
-@Preview
+//@Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 private fun prevDetailScreen() {
+
+    val height = LocalConfiguration.current.screenHeightDp
 
     var fav by remember {
         mutableStateOf(false)
@@ -382,11 +434,11 @@ private fun prevDetailScreen() {
         Scaffold(
             floatingActionButton = {
             }
-        ) {
+        ) {it->
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
 
                 Box(
@@ -397,10 +449,13 @@ private fun prevDetailScreen() {
                     Image(
                         painter = painterResource(id = R.drawable.ic_launcher_background),
                         contentDescription = " image",
-                        contentScale = ContentScale.Fit,
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .clip(RoundedCornerShape(CornerSize(7.dp)))
+                            .fillMaxWidth()
+                            .height(((height / 2) - 50).dp)
                             .align(Alignment.TopCenter)
+
+
                     )
 
                     IconButton(
@@ -418,6 +473,82 @@ private fun prevDetailScreen() {
 
                             )
                     }
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Card(
+                        shape = RoundedCornerShape(corner = CornerSize(5.dp)),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                        )
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_droplet),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier.padding(10.dp)
+                        )
+                    }
+                    Text(
+                        text = "detailUi.plants.watering",
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 14.sp,
+                    )
+                }
+
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Card(
+                        shape = RoundedCornerShape(corner = CornerSize(5.dp)),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                        )
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_sunlight),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier.padding(10.dp)
+                        )
+                    }
+                    Text(
+                        text = "detailUi.plants.sunlight",
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 14.sp,
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Card(
+                        shape = RoundedCornerShape(corner = CornerSize(5.dp)),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                        )
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_plant),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier.padding(10.dp)
+                        )
+                    }
+                    Text(
+                        text = "detailUi.plants.soil",
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 14.sp,
+                    )
                 }
             }
 

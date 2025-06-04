@@ -44,17 +44,23 @@ class DashboardViewModel(
             _plants.value = DashboardUi(loading = true)
 
             if (Utils.isConnected(appContext.applicationContext)) {
-                var plants = plantDetailsRepoImpl.getAllPlants()
+                try {
 
-                if (plants.plants.isNotEmpty()) {
-                    _plants.update {
-                        it.copy(plants = plants.plants, loading = false, error = "")
-                    }
-                } else {
-                    _plants.update {
-                        it.copy(plants = emptyList(), error = "No plant(s) found!", loading = false)
+                    var plants = plantDetailsRepoImpl.getAllPlants()
+                    if (plants.plants.isNotEmpty()) {
+                        _plants.update {
+                            it.copy(plants = plants.plants, loading = false, error = "")
+                        }
+                    } else {
+                        _plants.update {
+                            it.copy(plants = emptyList(), error = "No plant(s) found!", loading = false)
+                        }
                     }
                 }
+                catch (e : Exception) {
+                    Log.e("Dhaval", "getAllPlants: EXCEPTION : ${e.toString()}", )
+                }
+
             } else {
                 _plants.value = DashboardUi(error = "No Internet connection!")
             }

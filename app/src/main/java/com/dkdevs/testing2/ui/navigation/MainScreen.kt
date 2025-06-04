@@ -5,6 +5,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
@@ -51,13 +54,20 @@ fun MainScreen(
 
     Scaffold(
         bottomBar = {
-            NavigationBar {
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer
+            ) {
                 val navBackStackEntry by homeNavController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
 
                 NavList.forEach { routes ->
 
                     NavigationBarItem(
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.White,
+                            indicatorColor = MaterialTheme.colorScheme.primary,
+                            unselectedIconColor = MaterialTheme.colorScheme.primary
+                        ),
                         selected = currentDestination?.hierarchy?.any() { it.hasRoute(route = routes.route::class) } == true,
                         onClick = {
                             selectedNav = routes.name
@@ -75,13 +85,13 @@ fun MainScreen(
                         },
                         icon = {
                             Icon(painter = painterResource(id = routes.icon), contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary)
+                                )
                         })
                 }
             }
         }
-    ) {
-        HomeGraph(navHostController = homeNavController, Modifier.padding(it), redirectToDetailScreen = {
+    ) {it->
+        HomeGraph(navHostController = homeNavController, redirectToDetailScreen = {
             redirectToDetailsScreen.invoke(it)
         })
     }
