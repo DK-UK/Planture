@@ -18,4 +18,6 @@ interface PlantDetailsRepo {
     suspend fun removePlantToWishlist(plantId: Int)
 
     suspend fun removePlantFromMyGarden(plantId: Int)
+
+    suspend fun updatePlantToAddToMyGarden(addToMyGarden : Boolean, plantId : Int)
 }

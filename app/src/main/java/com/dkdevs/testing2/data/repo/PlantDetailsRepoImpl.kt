@@ -49,4 +49,8 @@ class PlantDetailsRepoImpl(private var apiService : PlantDetailsApiRoutes,
     override suspend fun removePlantFromMyGarden(plantId: Int) {
         db.plantDao().deletePlant(plantId)
     }
+
+    override suspend fun updatePlantToAddToMyGarden(addToMyGarden: Boolean, plantId: Int) {
+        db.plantDao().updatePlantToAddToMyGarden(addToMyGarden, plantId)
+    }
 }

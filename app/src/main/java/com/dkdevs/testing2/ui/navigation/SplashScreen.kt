@@ -1,6 +1,8 @@
 package com.dkdevs.testing2.ui.navigation
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,9 +23,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dkdevs.testing2.R
+import com.dkdevs.testing2.ui.theme.Testing2Theme
+import com.dkdevs.testing2.ui.theme.plantColors
 import kotlinx.coroutines.delay
 
 @Composable
@@ -32,7 +37,7 @@ fun SplashScreen(
     redirectToMainScreen : () -> Unit
 ) {
 
-    var redirect = produceState(initialValue = false) {
+    produceState(initialValue = false) {
         var timer = 0
 
         while (true){
@@ -48,7 +53,8 @@ fun SplashScreen(
 
 
     Box(modifier = modifier
-        .fillMaxSize(),
+        .fillMaxSize()
+        .background(color = MaterialTheme.plantColors.cardBackground),
         contentAlignment = Alignment.Center
     ){
         Column(
@@ -64,7 +70,7 @@ fun SplashScreen(
                     .align(Alignment.CenterHorizontally)
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             // App Name
             Text(
@@ -75,5 +81,14 @@ fun SplashScreen(
             )
 
         }
+    }
+}
+
+@Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+private fun prevSplashScreen() {
+    Testing2Theme {
+        SplashScreen {  }
     }
 }

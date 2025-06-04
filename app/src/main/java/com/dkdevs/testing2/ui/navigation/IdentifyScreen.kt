@@ -7,6 +7,8 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -45,6 +48,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.dkdevs.testing2.R
 import com.dkdevs.testing2.ui.Utils
+import com.dkdevs.testing2.ui.theme.Testing2Theme
+import com.dkdevs.testing2.ui.theme.plantColors
 import com.dkdevs.testing2.ui.uiComponents.MyAppTopBar
 import com.dkdevs.testing2.ui.vm.IdentifyViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -132,6 +137,7 @@ fun IdentifyScreen(
         Box(
             modifier = modifier
                 .fillMaxSize()
+                .background(color = MaterialTheme.plantColors.cardBackground)
                 .padding(it),
 
             ) {
@@ -199,9 +205,10 @@ fun IdentifyScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_gallery),
                             contentDescription = "pick from gallery",
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier
                                 .padding(10.dp)
-                                .size(35.dp)
+                                .size(25.dp)
                         )
                     }
 
@@ -221,9 +228,10 @@ fun IdentifyScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_camera),
                             contentDescription = "capture",
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier
                                 .padding(10.dp)
-                                .size(50.dp)
+                                .size(40.dp)
                         )
                     }
                 }
@@ -232,8 +240,32 @@ fun IdentifyScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showSystemUi = true)
 @Composable
 private fun prevIdentifyScreen() {
 //    IdentifyScreen()
+
+    Testing2Theme {
+        Card(
+            shape = CircleShape,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            ),
+            onClick = {
+
+            }
+
+        ) {
+
+            Image(
+                painter = painterResource(id = R.drawable.ic_gallery),
+                contentDescription = "pick from gallery",
+                modifier = Modifier
+                    .padding(10.dp)
+                    .size(25.dp)
+            )
+        }
+    }
+
 }

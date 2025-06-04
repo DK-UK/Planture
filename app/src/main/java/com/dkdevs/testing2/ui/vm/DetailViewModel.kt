@@ -77,11 +77,16 @@ class DetailViewModel(
         }
     }
 
-    fun addPlantToMyGarden(addToMyGarden : Boolean, plants: PlantEntity) {
+    fun addPlantToMyGarden(addToMyGarden : Boolean, isWishlist: Boolean, plants: PlantEntity) {
         viewModelScope.launch {
 
             if (addToMyGarden){
-                plantDetailsRepoImpl.addPlantToMyGarden(plants.copy(is_in_my_garden = true))
+                if (isWishlist) {
+                    plantDetailsRepoImpl.updatePlantToAddToMyGarden(true, plants.plant_id)
+                }
+                else {
+                    plantDetailsRepoImpl.addPlantToMyGarden(plants.copy(is_in_my_garden = true))
+                }
             }
             else {
                 plantDetailsRepoImpl.removePlantFromMyGarden(plants.plant_id)

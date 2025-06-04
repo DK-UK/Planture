@@ -36,7 +36,6 @@ val NavList = listOf(
     BottomNav("Identify", HomeNavRoutes.IdentifyScreen, R.drawable.ic_camera),
     BottomNav("Wishlist", HomeNavRoutes.Saved, R.drawable.ic_bookmark),
     BottomNav("My Garden", HomeNavRoutes.MyGarden, R.drawable.ic_garden),
-//    BottomNav("Profile", HomeNavRoutes.Profile, Icons.Default.AccountCircle)
 )
 
 @Composable
@@ -51,33 +50,6 @@ fun MainScreen(
     val homeNavController = rememberNavController()
 
     Scaffold(
-        topBar = {
-
-//            MyAppTopBar(title = selectedNav)
-
-                /*postIcons = {
-                    Icon(imageVector = Icons.Default.Settings, contentDescription = "settings",
-                        tint = Color.White,
-                        modifier = Modifier.clickable {
-                            onRedirectToSettings.invoke()
-                        })
-                }*/
-
-           /* Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp)
-            ) {
-                Text(
-                    text = selectedNav,
-                    modifier = Modifier.weight(1f)
-                )
-                Icon(imageVector = Icons.Default.Settings, contentDescription = "settings",
-                    modifier = Modifier.clickable {
-                        onRedirectToSettings.invoke()
-                    })
-            }*/
-        },
         bottomBar = {
             NavigationBar {
                 val navBackStackEntry by homeNavController.currentBackStackEntryAsState()

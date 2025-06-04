@@ -23,7 +23,7 @@ interface PlantDao {
     @Query("UPDATE plant set is_wishlisted=:isWishlisted where plant_id=:plantId")
     suspend fun updatePlantWishlistStatus(isWishlisted : Boolean, plantId : Int)
 
-    @Query("UPDATE plant set is_in_my_garden=:addToMyGarden where plant_id=:plantId")
+    @Query("UPDATE plant set is_wishlisted=0, is_in_my_garden=:addToMyGarden where plant_id=:plantId")
     suspend fun updatePlantToAddToMyGarden(addToMyGarden : Boolean, plantId : Int)
 
     @Query("DELETE from plant where plant_id=:plantId")

@@ -1,7 +1,6 @@
 package com.dkdevs.testing2.ui.navigation
 
 import android.util.Log
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -45,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -56,6 +56,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.dkdevs.testing2.R
 import com.dkdevs.testing2.ui.theme.Testing2Theme
+import com.dkdevs.testing2.ui.theme.plantColors
 import com.dkdevs.testing2.ui.uiComponents.DialogBox
 import com.dkdevs.testing2.ui.uiComponents.MyAppTopBar
 import com.dkdevs.testing2.ui.vm.DetailViewModel
@@ -106,33 +107,37 @@ fun PlantDetailScreen(
 
     Scaffold(
         topBar = {
-            MyAppTopBar(title = "Details",
+            MyAppTopBar(
+                title = "Details",
                 isBackAvailable = true,
                 onBackPressed = {
                     onBackPressed.invoke()
                 }, postIcons = {
                     if (isInMyGarden) {
                         Column {
-                            Icon(Icons.Default.MoreVert, contentDescription = "More options",
+                            Icon(
+                                Icons.Default.MoreVert, contentDescription = "More options",
+                                tint = Color.White,
                                 modifier = Modifier.clickable {
                                     showMoreOption = true
                                 })
-                            if (showMoreOption) {
-                                DropdownMenu(
-                                    expanded = showMoreOption,
-                                    onDismissRequest = { showMoreOption = false }) {
-                                    DropdownMenuItem(
-                                        text = { Text(text = "Remove from garden") },
-                                        onClick = {
-                                            showMoreOption = false
-                                            vm.addPlantToMyGarden(
-                                                addToMyGarden = false,
-                                                detailUi.plants
-                                            )
-                                            isInMyGarden = false
-                                        })
-                                }
+
+                            DropdownMenu(
+                                expanded = showMoreOption,
+                                onDismissRequest = { showMoreOption = false }) {
+                                DropdownMenuItem(
+                                    text = { Text(text = "Remove from garden") },
+                                    onClick = {
+                                        showMoreOption = false
+                                        vm.addPlantToMyGarden(
+                                            addToMyGarden = false,
+                                            isWishlist = false,
+                                            plants = detailUi.plants
+                                        )
+                                        isInMyGarden = false
+                                    })
                             }
+
                         }
                     }
                 })
@@ -156,12 +161,13 @@ fun PlantDetailScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 DialogBox(
-                    title = "This plant will be add to your garden. Are you sure ?",
+                    title = if (isWishlist) "Are you sure ?" else "This plant will be add to your garden. Are you sure ?",
+                    message = if (isWishlist) "This plant will be removed from wishlist and will add to the My garden." else null,
                     show = showDialog,
                     onDismiss = { showDialog = !showDialog }) {
                     showDialog = !showDialog
                     isInMyGarden = true
-                    vm.addPlantToMyGarden(true, detailUi.plants)
+                    vm.addPlantToMyGarden(true, isWishlist, detailUi.plants)
                 }
             }
         }
@@ -170,6 +176,7 @@ fun PlantDetailScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
+                    .background(color = MaterialTheme.plantColors.cardBackground)
                     .padding(it),
                 contentAlignment = Alignment.Center
             ) {
@@ -202,14 +209,17 @@ fun PlantDetailScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    if (!detailUi.plants.is_in_my_garden) {
+                    if (!isInMyGarden) {
 
-                        IconButton(onClick = {
-                            isWishlist = !isWishlist
-                            vm.addPlantToWishlist(isWishlist, detailUi.plants)
-                        },
-                            modifier = Modifier.scale(scale)
-                                    .align(Alignment.BottomEnd)) {
+                        IconButton(
+                            onClick = {
+                                isWishlist = !isWishlist
+                                vm.addPlantToWishlist(isWishlist, detailUi.plants)
+                            },
+                            modifier = Modifier
+                                .scale(scale)
+                                .align(Alignment.BottomEnd)
+                        ) {
                             Icon(
                                 imageVector = if (isWishlist) Icons.Default.Favorite
                                 else Icons.Default.FavoriteBorder,
@@ -380,7 +390,8 @@ private fun prevDetailScreen() {
             ) {
 
                 Box(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .background(color = MaterialTheme.colorScheme.onSecondary)
                 ) {
                     Image(
@@ -405,7 +416,7 @@ private fun prevDetailScreen() {
                             contentDescription = "wishlist icon",
                             tint = if (fav) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
 
-                        )
+                            )
                     }
                 }
             }

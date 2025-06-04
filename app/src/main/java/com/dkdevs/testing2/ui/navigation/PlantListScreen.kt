@@ -1,6 +1,7 @@
 package com.dkdevs.testing2.ui.navigation
 
 import android.graphics.drawable.Icon
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dkdevs.testing2.data.repo.PlantDestinationType
+import com.dkdevs.testing2.ui.theme.plantColors
 import com.dkdevs.testing2.ui.uiComponents.MyAppTopBar
 import com.dkdevs.testing2.ui.vm.PlantListViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -68,30 +71,36 @@ fun PlantListScreen(
         }
     ) {
 
-        if (listUi.loading) {
-            Box(modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+        Box(
+            modifier = Modifier.fillMaxSize()
+                .background(color = MaterialTheme.plantColors.cardBackground)
+        ){
+
+            if (listUi.loading) {
+                Box(modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
             }
-        }
-        else if (listUi.error.isNotEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center) {
-                Text(text = listUi.error, fontWeight = FontWeight.Normal,
-                    fontSize = 16.sp)
+            else if (listUi.error.isNotEmpty()) {
+                Box(modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center) {
+                    Text(text = listUi.error, fontWeight = FontWeight.Normal,
+                        fontSize = 16.sp)
+                }
             }
-        }
-        else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(5.dp)
-            ) {
-                items(listUi.plants) {
-                    plantItem(plantName = it.name, plantScientificName = it.scientific_name, plantImg = it.alt_img_url) {
-                        onPlantClicked.invoke(it.plant_id)
+            else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 20.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    items(listUi.plants) {
+                        plantItem(plantName = it.name, plantScientificName = it.scientific_name, plantImg = it.alt_img_url) {
+                            onPlantClicked.invoke(it.plant_id)
+                        }
                     }
                 }
             }
