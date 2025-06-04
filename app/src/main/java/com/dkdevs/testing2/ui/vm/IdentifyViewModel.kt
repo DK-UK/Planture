@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.dkdevs.testing2.data.models.Plant
 import com.dkdevs.testing2.data.repo.IdentificationRepoImpl
 import com.dkdevs.testing2.data.repo.PlantDetailsRepoImpl
-import com.dkdevs.testing2.ui.Utils
+import com.dkdevs.testing2.ui.utility.Utils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

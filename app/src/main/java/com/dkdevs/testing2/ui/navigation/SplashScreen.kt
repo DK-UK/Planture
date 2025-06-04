@@ -21,7 +21,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,13 +47,21 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.dkdevs.testing2.R
 import com.dkdevs.testing2.ui.theme.Testing2Theme
 import com.dkdevs.testing2.ui.theme.plantColors
+import com.dkdevs.testing2.ui.utility.MyPreferences
 import kotlinx.coroutines.delay
+import org.koin.androidx.compose.inject
 
 @Composable
 fun SplashScreen(
     modifier : Modifier = Modifier,
-    redirectToMainScreen : () -> Unit
+    redirectToMainScreen : (Boolean) -> Unit
 ) {
+
+   val myPref : MyPreferences by inject()
+
+    var isVisitedAlready by remember {
+        mutableStateOf(myPref.getInfoScreenVisitedStatus())
+    }
 
     produceState(initialValue = false) {
         var timer = 0
@@ -57,45 +69,12 @@ fun SplashScreen(
         while (true){
             if (timer > 2000){
                 value = true
-                redirectToMainScreen.invoke()
+                redirectToMainScreen.invoke(isVisitedAlready)
             }
             timer += 1000
             delay(1000)
         }
     }
-
-//    val view = LocalView.current
-//    val window = (view.context as Activity).window
-//
-//    WindowCompat.setDecorFitsSystemWindows(window, false)
-//    window.statusBarColor = Color.Transparent.toArgb()
-//    WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
-
-    val owner = LocalLifecycleOwner.current
-
-  /*  DisposableEffect(owner) {
-        val observer = LifecycleEventObserver {owner, event->
-            when(event) {
-                Lifecycle.Event.ON_CREATE -> TODO()
-                Lifecycle.Event.ON_START -> {
-
-                }
-                Lifecycle.Event.ON_RESUME -> TODO()
-                Lifecycle.Event.ON_PAUSE -> TODO()
-                Lifecycle.Event.ON_STOP -> TODO()
-                Lifecycle.Event.ON_DESTROY -> TODO()
-                Lifecycle.Event.ON_ANY -> TODO()
-                else -> {}
-            }
-        }
-
-        owner.lifecycle.addObserver(observer)
-
-        onDispose {
-            owner.lifecycle.removeObserver(observer)
-        }
-    }
-*/
 
     Box(modifier = modifier
         .fillMaxSize()

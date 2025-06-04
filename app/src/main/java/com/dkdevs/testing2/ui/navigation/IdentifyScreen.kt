@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.dkdevs.testing2.R
-import com.dkdevs.testing2.ui.Utils
+import com.dkdevs.testing2.ui.utility.Utils
 import com.dkdevs.testing2.ui.theme.Testing2Theme
 import com.dkdevs.testing2.ui.theme.plantColors
 import com.dkdevs.testing2.ui.uiComponents.MyAppTopBar

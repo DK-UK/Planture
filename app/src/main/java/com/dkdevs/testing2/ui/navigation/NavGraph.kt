@@ -20,9 +20,9 @@ fun NavGraph(
         navController = navHostController, startDestination = MainNavRoutes.SplashScreen) {
 
         composable<MainNavRoutes.SplashScreen> {
-            SplashScreen {
+            SplashScreen {isVisited->
                 // redirect to info if user visits first time
-                if (true){
+                if (!isVisited){
                     navHostController.navigateToInfoScreen(true)
                 }
                 else {

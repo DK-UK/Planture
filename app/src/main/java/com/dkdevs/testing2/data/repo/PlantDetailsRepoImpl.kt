@@ -3,11 +3,9 @@ package com.dkdevs.testing2.data.repo
 import android.util.Log
 import com.dkdevs.testing2.data.local.PlantDatabase
 import com.dkdevs.testing2.data.local.PlantEntity
-import com.dkdevs.testing2.data.models.Plant
 import com.dkdevs.testing2.data.models.PlantDetails
-import com.dkdevs.testing2.data.models.toPlantEntity
 import com.dkdevs.testing2.data.remote.PlantDetailsApiRoutes
-import com.dkdevs.testing2.ui.Utils
+import com.dkdevs.testing2.ui.utility.Utils
 
 class PlantDetailsRepoImpl(private var apiService : PlantDetailsApiRoutes,
     private var db : PlantDatabase) : PlantDetailsRepo {

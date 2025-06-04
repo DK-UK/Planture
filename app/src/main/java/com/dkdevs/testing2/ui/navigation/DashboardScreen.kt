@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.res.Configuration
 import android.util.Log
 import android.view.WindowInsetsController
+import android.view.WindowManager
 import android.view.inputmethod.InputMethod
 import android.view.inputmethod.InputMethodManager
 import androidx.compose.animation.AnimatedVisibility
@@ -57,6 +58,8 @@ import androidx.compose.ui.input.InputMode
 import androidx.compose.ui.input.InputModeManager
 import androidx.compose.ui.input.key.SoftKeyboardInterceptionModifierNode
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -86,6 +89,8 @@ fun DashboardScreen(
     val dashboardUi = vm.plants.collectAsStateWithLifecycle().value
 
     val state = rememberLazyListState()
+    val keyboardManager = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
 
     var searchText by rememberSaveable {
         mutableStateOf("")
@@ -201,14 +206,18 @@ fun DashboardScreen(
                     ),
                     keyboardOptions = if (searchText.length > 2) KeyboardOptions(imeAction = ImeAction.Search) else KeyboardOptions.Default,
                     keyboardActions = KeyboardActions(onSearch = {
-                        window.setSoftInputMode(InputMethodManager.RESULT_HIDDEN)
+                        keyboardManager?.hide()
+                        focusManager.clearFocus()
                         vm.searchPlant(searchText)
                     }),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 10.dp, horizontal = 16.dp)
                         .align(Alignment.TopCenter)
+                        .padding(vertical = 10.dp, horizontal = 16.dp)
                         .clip(RoundedCornerShape(CornerSize(50.dp)))
+                        .clickable {
+                            keyboardManager?.show()
+                        }
                 )
             }
 

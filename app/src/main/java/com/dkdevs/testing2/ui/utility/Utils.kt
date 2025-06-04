@@ -1,4 +1,4 @@
-package com.dkdevs.testing2.ui
+package com.dkdevs.testing2.ui.utility
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -12,7 +12,6 @@ import com.dkdevs.testing2.data.models.Plant
 import com.dkdevs.testing2.data.models.toPlantEntity
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.ByteArrayOutputStream

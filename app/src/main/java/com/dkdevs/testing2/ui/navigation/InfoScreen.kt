@@ -53,6 +53,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.dkdevs.testing2.R
 import com.dkdevs.testing2.ui.theme.Testing2Theme
+import com.dkdevs.testing2.ui.utility.MyPreferences
+import org.koin.androidx.compose.inject
 
 @Preview
 @Composable
@@ -67,6 +69,8 @@ private fun prevInfoScreen() {
 fun InfoScreen(
     redirectToMainScreen: () -> Unit
 ) {
+
+    val myPref : MyPreferences by inject()
 
     Box(
         modifier = Modifier
@@ -142,7 +146,10 @@ fun InfoScreen(
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 // Get Started Button
                 Button(
-                    onClick = redirectToMainScreen,
+                    onClick = {
+                        myPref.setInfoScreenVisitedStatus(true)
+                        redirectToMainScreen.invoke()
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
