@@ -91,7 +91,7 @@ fun MainScreen(
             }
         }
     ) {it->
-        HomeGraph(navHostController = homeNavController, redirectToDetailScreen = {
+        HomeGraph(bottomPadding = it, navHostController = homeNavController, redirectToDetailScreen = {
             redirectToDetailsScreen.invoke(it)
         })
     }

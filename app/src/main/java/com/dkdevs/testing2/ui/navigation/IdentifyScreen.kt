@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,6 +55,7 @@ import com.dkdevs.testing2.ui.theme.plantColors
 import com.dkdevs.testing2.ui.uiComponents.MyAppTopBar
 import com.dkdevs.testing2.ui.vm.IdentifyViewModel
 import org.koin.androidx.compose.koinViewModel
+import androidx.core.net.toUri
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -123,7 +125,7 @@ fun IdentifyScreen(
 
     LaunchedEffect(key1 = identifyUi) {
         if (identifyUi.plantDetails.isNotEmpty()) {
-            Log.e("Dhaval", "IdentifyScreen: LAUNCH EFFECT", )
+            Log.e("Dhaval", "IdentifyScreen: LAUNCH EFFECT")
             redirectToPlantDetailScreen.invoke(identifyUi.plantDetails.first().id)
             vm.clearData()
         }
@@ -133,7 +135,7 @@ fun IdentifyScreen(
         modifier = modifier
             .statusBarsPadding(),
         topBar = {
-            MyAppTopBar(title = "Identify")
+            MyAppTopBar(title = stringResource(R.string.identify))
         }
     ) {
         Box(
@@ -152,7 +154,7 @@ fun IdentifyScreen(
                         .align(Alignment.Center)
                 ) {
                     AsyncImage(
-                        model = Uri.parse(imageStr), contentDescription = "plant image",
+                        model = imageStr.toUri(), contentDescription = "plant image",
                         modifier = Modifier.height((height / 2).dp)
                     )
 
@@ -161,12 +163,12 @@ fun IdentifyScreen(
                         Button(onClick = {
                             imageStr = ""
                         }) {
-                            Text(text = "Retry")
+                            Text(text = stringResource(R.string.retry))
                         }
                     }
                     else {
                         Text(
-                            text = "Identifying...",
+                            text = stringResource(R.string.identifying),
                             fontWeight = FontWeight.Normal,
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.primary

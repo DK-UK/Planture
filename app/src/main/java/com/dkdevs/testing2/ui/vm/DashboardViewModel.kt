@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.dkdevs.testing2.R
 import com.dkdevs.testing2.data.models.Plant
 import com.dkdevs.testing2.data.repo.PlantDetailsRepoImpl
 import com.dkdevs.testing2.ui.utility.Utils
@@ -33,36 +34,44 @@ class DashboardViewModel(
             initialValue = DashboardUi()
         )
 
+    private var backupPlants : List<Plant> = emptyList()
+
     // placed in init block because it was calling every time
     // in LaunchEffect while changing tab
     init {
         getAllPlants()
     }
 
-    private fun getAllPlants() {
+    fun getAllPlants(plantList : List<Plant> = emptyList(), lastId : Int = 0) {
         viewModelScope.launch {
             _plants.value = DashboardUi(loading = true)
 
             if (Utils.isConnected(appContext.applicationContext)) {
                 try {
 
-                    var plants = plantDetailsRepoImpl.getAllPlants()
+                    var plants = plantDetailsRepoImpl.getAllPlants(lastId)
                     if (plants.plants.isNotEmpty()) {
+                        val completeList = plantList + plants.plants
+                        backupPlants = completeList
+
                         _plants.update {
-                            it.copy(plants = plants.plants, loading = false, error = "")
+                            it.copy(plants = if (plantList.isEmpty()) plants.plants else completeList, loading = false, error = "")
                         }
                     } else {
                         _plants.update {
-                            it.copy(plants = emptyList(), error = "No plant(s) found!", loading = false)
+                            it.copy(plants = emptyList(), error = appContext.getString(R.string.no_plants_found), loading = false)
                         }
                     }
                 }
                 catch (e : Exception) {
                     Log.e("Dhaval", "getAllPlants: EXCEPTION : ${e.toString()}", )
+                    _plants.update {
+                        it.copy(plants = emptyList(), error = appContext.getString(R.string.something_went_wrong), loading = false)
+                    }
                 }
 
             } else {
-                _plants.value = DashboardUi(error = "No Internet connection!")
+                _plants.value = DashboardUi(error = appContext.getString(R.string.no_internet_connection))
             }
         }
     }
@@ -91,6 +100,7 @@ class DashboardViewModel(
         }
     }
 */
+
     fun searchPlant(plantName: String) {
         viewModelScope.launch {
             _plants.value = DashboardUi(loading = true)
@@ -98,17 +108,22 @@ class DashboardViewModel(
             if (Utils.isConnected(appContext.applicationContext)) {
                 var plants = plantDetailsRepoImpl.searchPlant(plantName)
                 if (plants.plants.isNotEmpty()) {
+
                     _plants.update {
                         it.copy(plants = plants.plants, loading = false, error = "")
                     }
                 } else {
                     _plants.update {
-                        it.copy(plants = emptyList(), error = "No plant(s) found!", loading = false)
+                        it.copy(plants = emptyList(), error = appContext.getString(R.string.no_plants_found), loading = false)
                     }
                 }
             } else {
-                _plants.value = DashboardUi(error = "No Internet connection!")
+                _plants.value = DashboardUi(error = appContext.getString(R.string.no_internet_connection))
             }
         }
+    }
+
+    fun getBackupPlants() {
+        _plants.value = DashboardUi(plants = backupPlants)
     }
 }

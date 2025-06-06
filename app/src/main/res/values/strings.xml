@@ -1,3 +1,33 @@
 <resources>
     <string name="app_name">Planture</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="search_for_plants">Search for plants</string>
+    <string name="no_plants_found">No plant(s) found!</string>
+    <string name="something_went_wrong">Something went wrong!</string>
+    <string name="no_internet_connection">No Internet connection!</string>
+    <string name="image_not_found">Image not found!</string>
+    <string name="identify">Identify</string>
+    <string name="retry">Retry</string>
+    <string name="identifying">Identifying...</string>
+    <string name="info_screen_tagline">Discover, nurture, and grow your green friends.</string>
+    <string name="plant_identification">Plant Identification</string>
+    <string name="identify_plants_using_camera_or_photos">Identify plants using camera or photos.</string>
+    <string name="care_reminders">Care Reminders</string>
+    <string name="set_watering_and_care_schedules_upcoming">Set watering and care schedules. (upcoming)</string>
+    <string name="knowledge_base">Knowledge Base</string>
+    <string name="get_tips_on_light_soil_and_growth">Get tips on light, soil, and growth.</string>
+    <string name="let_s_grow">Let’s Grow 🌿</string>
+    <string name="info_screen_footer">Your green journey begins here.</string>
+    <string name="wishlist">Wishlist</string>
+    <string name="my_garden">My Garden</string>
+    <string name="details">Details</string>
+    <string name="remove_from_garden">Remove from garden</string>
+    <string name="add_to_my_garden">Add to My Garden</string>
+    <string name="are_you_sure">Are you sure ?</string>
+    <string name="this_plant_will_be_add_to_your_garden_are_you_sure">This plant will be add to your garden. Are you sure ?</string>
+    <string name="this_plant_will_be_removed_from_wishlist_and_will_add_to_the_my_garden">This plant will be removed from wishlist and will add to the My garden.</string>
+    <string name="nurturing">Nurturing</string>
+    <string name="watering">Watering</string>
+    <string name="sunlight">Sunlight</string>
+    <string name="soil">Soil</string>
 </resources>

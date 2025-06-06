@@ -9,8 +9,8 @@ import com.dkdevs.testing2.ui.utility.Utils
 
 class PlantDetailsRepoImpl(private var apiService : PlantDetailsApiRoutes,
     private var db : PlantDatabase) : PlantDetailsRepo {
-    override suspend fun getAllPlants(): PlantDetails {
-        return apiService.getAllPlants()
+    override suspend fun getAllPlants(lastId : Int): PlantDetails {
+        return apiService.getAllPlants(lastId = lastId)
     }
 
     override suspend fun searchPlant(

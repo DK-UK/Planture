@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import com.dkdevs.testing2.R
 import com.dkdevs.testing2.data.local.PlantEntity
 import com.dkdevs.testing2.data.repo.PlantDestinationType
 import com.dkdevs.testing2.data.repo.PlantListRepoImpl
@@ -57,14 +58,14 @@ class PlantListViewModel(
                         _plants.update {
                             it.copy(
                                 plants = emptyList(),
-                                error = "No plant(s) found",
+                                error = appContext.getString(R.string.no_plants_found),
                                 loading = false
                             )
                         }
                     }
                 }
             } else {
-                _plants.value = PlantListUi(error = "No Internet connection!")
+                _plants.value = PlantListUi(error = appContext.getString(R.string.no_internet_connection))
             }
         }
     }

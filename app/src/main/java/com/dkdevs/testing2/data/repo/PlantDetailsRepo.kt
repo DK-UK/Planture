@@ -5,7 +5,7 @@ import com.dkdevs.testing2.data.models.Plant
 import com.dkdevs.testing2.data.models.PlantDetails
 
 interface PlantDetailsRepo {
-    suspend fun getAllPlants() : PlantDetails
+    suspend fun getAllPlants(lastId : Int) : PlantDetails
 
     suspend fun searchPlant(plantName : String) : PlantDetails
 

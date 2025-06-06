@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.dkdevs.testing2.R
 import com.dkdevs.testing2.data.models.Plant
 import com.dkdevs.testing2.data.repo.IdentificationRepoImpl
 import com.dkdevs.testing2.data.repo.PlantDetailsRepoImpl
@@ -58,14 +59,14 @@ class IdentifyViewModel(
                         "identifyPlant: ERROR : ${e.response()} --- ${e.message()} --- ${e.cause}",
                     )
                     if (e.code() == 404){
-                        _plantDetails.value = IdentifyUi(error = "Image not found!")
+                        _plantDetails.value = IdentifyUi(error = appContext.getString(R.string.image_not_found))
                     }
                     else {
-                        _plantDetails.value = IdentifyUi(error = "Something went wrong!")
+                        _plantDetails.value = IdentifyUi(error = appContext.getString(R.string.something_went_wrong))
                     }
                 }
             } else {
-                _plantDetails.value = IdentifyUi(error = "No Internet connection!")
+                _plantDetails.value = IdentifyUi(error = appContext.getString(R.string.no_internet_connection))
             }
         }
     }
@@ -86,7 +87,7 @@ class IdentifyViewModel(
                     }
                 }
             } else {
-                _plantDetails.value = IdentifyUi(error = "No Internet connection!")
+                _plantDetails.value = IdentifyUi(error = appContext.getString(R.string.no_internet_connection))
             }
         }
     }

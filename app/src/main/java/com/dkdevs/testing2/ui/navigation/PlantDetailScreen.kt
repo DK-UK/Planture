@@ -50,6 +50,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -103,7 +104,6 @@ fun PlantDetailScreen(
     }
 
     LaunchedEffect(plantId) {
-        Log.e("Dhaval", "PLANT ID : ${plantId}")
         if (plantId > 0) {
             vm.getPlant(plantId)
         }
@@ -115,7 +115,7 @@ fun PlantDetailScreen(
             .statusBarsPadding(),
         topBar = {
             MyAppTopBar(
-                title = "Details",
+                title = stringResource(R.string.details),
                 isBackAvailable = true,
                 onBackPressed = {
                     onBackPressed.invoke()
@@ -133,7 +133,7 @@ fun PlantDetailScreen(
                                 expanded = showMoreOption,
                                 onDismissRequest = { showMoreOption = false }) {
                                 DropdownMenuItem(
-                                    text = { Text(text = "Remove from garden") },
+                                    text = { Text(text = stringResource(R.string.remove_from_garden)) },
                                     onClick = {
                                         showMoreOption = false
                                         vm.addPlantToMyGarden(
@@ -154,7 +154,7 @@ fun PlantDetailScreen(
             if (!isInMyGarden) {
                 ExtendedFloatingActionButton(
                     text = {
-                        Text(text = "Add to My Garden")
+                        Text(text = stringResource(R.string.add_to_my_garden))
                     },
                     icon = { /*TODO*/ },
                     onClick = {
@@ -168,8 +168,10 @@ fun PlantDetailScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 DialogBox(
-                    title = if (isWishlist) "Are you sure ?" else "This plant will be add to your garden. Are you sure ?",
-                    message = if (isWishlist) "This plant will be removed from wishlist and will add to the My garden." else null,
+                    title = if (isWishlist) stringResource(R.string.are_you_sure) else stringResource(
+                        R.string.this_plant_will_be_add_to_your_garden_are_you_sure
+                    ),
+                    message = if (isWishlist) stringResource(R.string.this_plant_will_be_removed_from_wishlist_and_will_add_to_the_my_garden) else null,
                     show = showDialog,
                     onDismiss = { showDialog = !showDialog }) {
                     showDialog = !showDialog
@@ -202,8 +204,8 @@ fun PlantDetailScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(state = rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                    .verticalScroll(state = rememberScrollState())
+                    .padding(it),
             ) {
 
                 Box {
@@ -211,7 +213,8 @@ fun PlantDetailScreen(
                         model = detailUi.plants.big_img_url,
                         contentDescription = "${detailUi.plants.name}'s image",
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .height(((screenHeight / 2) - 100).dp)
                     )
 
@@ -230,7 +233,7 @@ fun PlantDetailScreen(
                                 imageVector = if (isWishlist) Icons.Default.Favorite
                                 else Icons.Default.FavoriteBorder,
                                 contentDescription = "wishlist icon",
-                                tint = MaterialTheme.colorScheme.primary
+                                tint = Color.White
                             )
                         }
                     }
@@ -240,7 +243,8 @@ fun PlantDetailScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(it)
-                        .padding(horizontal = 16.dp, vertical = 50.dp),
+                        .padding(start = 16.dp, end = 16.dp, top = 10.dp, bottom = 50.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
 
                     Text(
@@ -259,7 +263,7 @@ fun PlantDetailScreen(
                     )
 
                     Text(
-                        text = "Nurturing",
+                        text = stringResource(R.string.nurturing),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.onBackground
@@ -287,7 +291,7 @@ fun PlantDetailScreen(
                             verticalArrangement = Arrangement.spacedBy(5.dp)
                         ){
                             Text(
-                                text = "Watering",
+                                text = stringResource(R.string.watering),
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 14.sp,
                                 color = MaterialTheme.colorScheme.onBackground
@@ -324,7 +328,7 @@ fun PlantDetailScreen(
                             verticalArrangement = Arrangement.spacedBy(5.dp)
                         ) {
                             Text(
-                                text = "Sunlight",
+                                text = stringResource(R.string.sunlight),
                                 fontWeight = FontWeight.Medium,
                                 color = MaterialTheme.colorScheme.onBackground,
                                 fontSize = 14.sp,
@@ -361,7 +365,7 @@ fun PlantDetailScreen(
 
                         ) {
                             Text(
-                                text = "Soil",
+                                text = stringResource(R.string.soil),
                                 fontWeight = FontWeight.Medium,
                                 color = MaterialTheme.colorScheme.onBackground,
                                 fontSize = 14.sp,
@@ -377,27 +381,6 @@ fun PlantDetailScreen(
                     }
                 }
             }
-
-            /* LazyColumn(
-                 modifier = Modifier
-                     .fillMaxWidth()
-                     .height((40 * detailUi.plants.data.size).dp),
-                 userScrollEnabled = false,
-                 state = LazyListState(),
-             ) {
-                 items(detailUi.plants.data) {
-                     Row(
-                         modifier = Modifier.fillMaxWidth(),
-                         verticalAlignment = Alignment.CenterVertically,
-                         horizontalArrangement = Arrangement.spacedBy(10.dp)
-                     ) {
-
-                         Text(text = it.key)
-
-                         Text(text = it.value)
-                     }
-                 }
-             }*/
         } else {
             Box(
 
@@ -406,7 +389,7 @@ fun PlantDetailScreen(
                     .padding(it),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "No plant found!")
+                Text(text = stringResource(R.string.no_plants_found))
             }
         }
     }

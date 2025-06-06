@@ -1,7 +1,10 @@
 package com.dkdevs.testing2.ui.navigation
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -26,7 +29,7 @@ fun NavGraph(
                     navHostController.navigateToInfoScreen(true)
                 }
                 else {
-                    navHostController.navigateToMainScreen()
+                    navHostController.navigateToMainScreen(true)
                 }
                 // redirect to main home screen
             }
@@ -34,19 +37,13 @@ fun NavGraph(
 
         composable<MainNavRoutes.InfoScreen> {
             InfoScreen {
-                navHostController.navigateToMainScreen()
+                navHostController.navigateToMainScreen(true)
             }
         }
 
        composable<MainNavRoutes.MainScreen> {
             MainScreen {
                 navHostController.navigateToDetailScreen(it)
-            }
-       }
-
-       composable<MainNavRoutes.Settings> {
-            SettingsScreen(){
-                navHostController.popBackStack()
             }
        }
 
@@ -63,14 +60,14 @@ fun NavGraph(
 
 @Composable
 fun HomeGraph(
+    bottomPadding : PaddingValues,
     navHostController: NavHostController,
     redirectToDetailScreen : (Int) -> Unit
 ) {
     NavHost(
-
         navController = navHostController, startDestination = HomeNavRoutes.Dashboard) {
         composable<HomeNavRoutes.Dashboard> {
-            DashboardScreen(){
+            DashboardScreen(Modifier.padding(PaddingValues(bottom = bottomPadding.calculateBottomPadding()))){
                 redirectToDetailScreen.invoke(it)
             }
         }
@@ -108,25 +105,6 @@ fun NavHostController.navigateToMainScreen(popBack : Boolean = false) {
         if (popBack) {
             popBackStack()
         }
-    }
-}
-
-fun NavHostController.navigateToSettingsScreen(popBack : Boolean = false) {
-    this.navigate(MainNavRoutes.Settings){
-        if (popBack) {
-            popBackStack()
-        }
-    }
-}
-
-fun NavHostController.navigateToDashboardScreen() {
-    this.navigate(HomeNavRoutes.Dashboard){
-        popUpTo(graph.findStartDestination().id){
-            saveState = true
-        }
-
-        launchSingleTop = true
-        restoreState = true
     }
 }
 

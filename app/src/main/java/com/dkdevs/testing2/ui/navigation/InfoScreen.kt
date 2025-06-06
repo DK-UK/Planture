@@ -126,7 +126,7 @@ fun InfoScreen(
 
                 // Tagline
                 Text(
-                    text = "Discover, nurture, and grow your green friends.",
+                    text = stringResource(R.string.info_screen_tagline),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color(0xFF5C6F60),
                     textAlign = TextAlign.Center
@@ -135,9 +135,18 @@ fun InfoScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Info Cards
-                InfoItem(icon = R.drawable.ic_identify, title = "Plant Identification", desc = "Identify plants using camera or photos.")
-                InfoItem(icon = R.drawable.ic_care, title = "Care Reminders", desc = "Set watering and care schedules.")
-                InfoItem(icon = R.drawable.ic_book, title = "Knowledge Base", desc = "Get tips on light, soil, and growth.")
+                InfoItem(icon = R.drawable.ic_identify, title = stringResource(R.string.plant_identification), desc = stringResource(
+                    R.string.identify_plants_using_camera_or_photos
+                )
+                )
+                InfoItem(icon = R.drawable.ic_care, title = stringResource(R.string.care_reminders), desc = stringResource(
+                    R.string.set_watering_and_care_schedules_upcoming
+                )
+                )
+                InfoItem(icon = R.drawable.ic_book, title = stringResource(R.string.knowledge_base), desc = stringResource(
+                    R.string.get_tips_on_light_soil_and_growth
+                )
+                )
 //                InfoItem(icon = Icons.Default.Search, title = "Environment Tracker", desc = "Track humidity, temp, and light.")
 
 //                Spacer(modifier = Modifier.height(24.dp))
@@ -156,14 +165,14 @@ fun InfoScreen(
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
-                    Text("Let’s Grow 🌿", color = Color.White)
+                    Text(stringResource(R.string.let_s_grow), color = Color.White)
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Footer
                 Text(
-                    text = "Your green journey begins here.",
+                    text = stringResource(R.string.info_screen_footer),
                     style = MaterialTheme.typography.labelSmall,
                     color = Color(0xFF839184)
                 )

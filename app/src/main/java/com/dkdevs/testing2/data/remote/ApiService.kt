@@ -62,7 +62,8 @@ interface IdentifyApiRoutes {
 interface PlantDetailsApiRoutes {
     @GET("plants")
     suspend fun getAllPlants(@Header("x-permapeople-key-id") keyId : String = BuildConfig.KEY_ID,
-                             @Header("x-permapeople-key-secret") keySecret : String = BuildConfig.KEY_SECRET) : PlantDetails
+                             @Header("x-permapeople-key-secret") keySecret : String = BuildConfig.KEY_SECRET,
+                             @Query("last_id") lastId : Int = 0) : PlantDetails
 
     @POST("search")
     suspend fun searchPlant(@Header("x-permapeople-key-id") keyId : String = BuildConfig.KEY_ID,

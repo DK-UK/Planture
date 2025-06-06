@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -45,10 +46,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -61,6 +67,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -71,6 +78,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.dkdevs.testing2.R
 import com.dkdevs.testing2.data.models.Plant
 import com.dkdevs.testing2.ui.theme.Testing2Theme
 import com.dkdevs.testing2.ui.theme.plantColors
@@ -96,17 +104,44 @@ fun DashboardScreen(
         mutableStateOf("")
     }
 
+    val allPlants = rememberUpdatedState(dashboardUi.plants)
+
     val view = LocalView.current
     val window = (view.context as Activity).window
     window.statusBarColor = MaterialTheme.colorScheme.primary.toArgb()
     window.navigationBarColor = MaterialTheme.colorScheme.secondaryContainer.toArgb()
     WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
 
+    /*LaunchedEffect(lastId) {
+        Log.e("Dhaval", "DashboardScreen: LASTID : $lastId", )
+        vm.getAllPlants(lastId = lastId)
+    }*/
+
+    LaunchedEffect(state) {
+
+            snapshotFlow { state.layoutInfo }
+                .collect {info ->
+                    if (searchText.isEmpty()){
+
+                        val visibleItemsInfo = info.visibleItemsInfo
+                        if (visibleItemsInfo.lastOrNull()?.index == info.totalItemsCount - 1) {
+
+                            // user is at the end of the list
+                            visibleItemsInfo.lastOrNull()?.let { it->
+                                Log.e("Dhaval", "DashboardScreen: INDEX : ${it.index} : Size : ${allPlants.value.size}", )
+                                vm.getAllPlants(allPlants.value, info.totalItemsCount)
+                            }
+                        }
+                    }
+                }
+
+    }
     Scaffold(
-        modifier = modifier
-            .statusBarsPadding(),
+        modifier = Modifier
+            .statusBarsPadding()
+            .navigationBarsPadding(),
         topBar = {
-            MyAppTopBar(title = "Dashboard")
+            MyAppTopBar(title = stringResource(R.string.dashboard))
         }
     ) {
         Box(
@@ -115,7 +150,6 @@ fun DashboardScreen(
                 .background(color = MaterialTheme.plantColors.cardBackground)
                 .padding(it)
         ) {
-
 
             if (dashboardUi.loading) {
                 Box(
@@ -180,7 +214,7 @@ fun DashboardScreen(
                     },
                     placeholder = {
                         Text(
-                            text = "Search for plants",
+                            text = stringResource(R.string.search_for_plants),
                             fontSize = 14.sp,
                             color = LocalContentColor.current.copy(alpha = 0.7f)
                         )
@@ -193,6 +227,7 @@ fun DashboardScreen(
                                 tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f),
                                 modifier = Modifier.clickable {
                                     searchText = ""
+                                    vm.getBackupPlants()
                                 }
                             )
                         }
@@ -237,7 +272,6 @@ fun plantItem(
     onClicked: () -> Unit
 ) {
 
-    Log.e("Dhaval", "plantItem: NAME : ${plantName} -- SCIENCE : ${plantScientificName}")
     Row(
         modifier = modifier
             .fillMaxWidth()

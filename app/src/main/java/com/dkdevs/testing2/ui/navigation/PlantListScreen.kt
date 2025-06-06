@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,10 +22,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dkdevs.testing2.R
 import com.dkdevs.testing2.data.repo.PlantDestinationType
 import com.dkdevs.testing2.ui.theme.plantColors
 import com.dkdevs.testing2.ui.uiComponents.MyAppTopBar
@@ -51,13 +54,14 @@ fun PlantListScreen(
 
     Scaffold(
         modifier = modifier
-            .statusBarsPadding(),
+            .statusBarsPadding()
+            .navigationBarsPadding(),
         topBar = {
             if (getPlantsFrom == PlantDestinationType.FromWishlist){
-                MyAppTopBar(title = "Wishlist")
+                MyAppTopBar(title = stringResource(R.string.wishlist))
             }
             else {
-                MyAppTopBar(title = "My Garden",
+                MyAppTopBar(title = stringResource(R.string.my_garden),
                     postIcons = {
                     })
             }
@@ -65,7 +69,8 @@ fun PlantListScreen(
     ) {
 
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .background(color = MaterialTheme.plantColors.cardBackground)
         ){
 
