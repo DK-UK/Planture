@@ -89,8 +89,8 @@ fun IdentifyScreen(
     }
 
     var cameraLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) {
-            cameraPermission = it
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) {
+            cameraPermission = it.all { it.value }
         }
 
     var galleryLauncher =
@@ -224,7 +224,7 @@ fun IdentifyScreen(
                             if (cameraPermission) {
                                 captureFromCameraLauncher.launch(null)
                             } else {
-                                cameraLauncher.launch(android.Manifest.permission.CAMERA)
+                                cameraLauncher.launch(arrayOf(android.Manifest.permission.CAMERA, android.Manifest.permission.READ_EXTERNAL_STORAGE))
                             }
                         }
                     ) {

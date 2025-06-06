@@ -34,7 +34,7 @@ class DashboardViewModel(
             initialValue = DashboardUi()
         )
 
-    private var backupPlants : List<Plant> = emptyList()
+    var backupPlants : List<Plant> = emptyList()
 
     // placed in init block because it was calling every time
     // in LaunchEffect while changing tab

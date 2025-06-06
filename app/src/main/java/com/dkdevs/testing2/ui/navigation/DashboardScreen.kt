@@ -104,7 +104,7 @@ fun DashboardScreen(
         mutableStateOf("")
     }
 
-    val allPlants = rememberUpdatedState(dashboardUi.plants)
+    val allPlants = rememberUpdatedState(vm.backupPlants)
 
     val view = LocalView.current
     val window = (view.context as Activity).window
