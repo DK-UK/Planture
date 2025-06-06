@@ -40,10 +40,10 @@ object Utils {
     }
 
     fun bitmapToUri(context: Context, bitmap: Bitmap) : Uri? {
-        val file = File(context.cacheDir, "images.png")
+        val file = File(context.cacheDir, "images.jpg")
         try {
             val fos = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos)
             fos.close()
             return FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
         }

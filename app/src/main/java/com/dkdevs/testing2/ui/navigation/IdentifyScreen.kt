@@ -75,9 +75,15 @@ fun IdentifyScreen(
     }
 
     var cameraPermission by remember {
-        mutableStateOf(
-            context.checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            mutableStateOf(
+                context.checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                        (context.checkSelfPermission(android.Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED)
+            )
+        } else {
+            mutableStateOf(
+                context.checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && (context.checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED))
+        }
     }
 
     var galleryPermission by remember {
@@ -90,7 +96,7 @@ fun IdentifyScreen(
 
     var cameraLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) {
-            cameraPermission = it.all { it.value }
+            cameraPermission = it.all {perm-> perm.value }
         }
 
     var galleryLauncher =
@@ -224,7 +230,12 @@ fun IdentifyScreen(
                             if (cameraPermission) {
                                 captureFromCameraLauncher.launch(null)
                             } else {
-                                cameraLauncher.launch(arrayOf(android.Manifest.permission.CAMERA, android.Manifest.permission.READ_EXTERNAL_STORAGE))
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    cameraLauncher.launch(arrayOf(android.Manifest.permission.CAMERA, android.Manifest.permission.READ_MEDIA_IMAGES))
+                                }
+                                else {
+                                    cameraLauncher.launch(arrayOf(android.Manifest.permission.CAMERA, android.Manifest.permission.READ_EXTERNAL_STORAGE))
+                                }
                             }
                         }
                     ) {
