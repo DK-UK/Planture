@@ -27,7 +27,7 @@ A simple and intuitive Android application that helps users identify plants thro
 
 <div align="center">
   
-<a href="demo/demo.webm">
+<a href="demo/planture_demo.webm">
     <img src="screenshots/dashboard_screen.png" alt="Planture Demo Video" width="400" height="700">
   </a>
   </br>
