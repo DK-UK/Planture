@@ -5,7 +5,9 @@ import android.graphics.Bitmap
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
+import android.os.Environment
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import com.dkdevs.testing2.data.local.PlantEntity
 import com.dkdevs.testing2.data.models.Data
 import com.dkdevs.testing2.data.models.Plant
@@ -40,12 +42,14 @@ object Utils {
     }
 
     fun bitmapToUri(context: Context, bitmap: Bitmap) : Uri? {
-        val file = File(context.cacheDir, "images.jpg")
+
+        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "images.jpg")
         try {
             val fos = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
             fos.close()
-            return FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+            return file.toUri()
+//            return FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
         }
         catch (e : Exception) {
             e.printStackTrace()
